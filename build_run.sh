@@ -11,8 +11,10 @@ function printlog() {
 }
 
 # Remove old container
-printlog "Removing container"
+printlog "Removing container and binary"
 docker rm -f $CONTAINER_NAME 2> /dev/null
+rm $BINARY_NAME 2> /dev/null
+docker rmi $(docker images -f dangling=true -q) 2> /dev/null
 
 # Build binary
 printlog "Building app binary"
@@ -23,5 +25,5 @@ printlog "Building docker image"
 docker build --no-cache -t $CONTAINER_NAME .
 
 # Run Docker image
-printlog "Running app on localhost:8080"
 docker run --name $CONTAINER_NAME -d -p 8080:8080 $CONTAINER_NAME
+printlog "Running app on localhost:8080"
