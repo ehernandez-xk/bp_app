@@ -23,8 +23,15 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.templ.Execute(w, nil)
 }
 
+// Added the Favicon
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "favicon.ico")
+}
+
 func main() {
 	http.Handle("/", &templateHandler{filename: "chat.html"})
+
+	http.HandleFunc("/favicon.ico", faviconHandler)
 
 	// start the web server
 	if err := http.ListenAndServe(":8080", nil); err != nil {
