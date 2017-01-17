@@ -4,8 +4,7 @@ MAINTAINER Eddy Hernández
 
 WORKDIR /app
 
-COPY app .
-COPY templates templates
+COPY . .
 
 EXPOSE 8080
 
