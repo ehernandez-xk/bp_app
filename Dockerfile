@@ -8,4 +8,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["/app/app"]
+CMD ["/app/chat", "-addr=:8080"]

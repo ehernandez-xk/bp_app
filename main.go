@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -20,7 +21,8 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
 		t.templ = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
 	})
-	t.templ.Execute(w, nil)
+	// Passing the request to inyect data in the template e.g. r.Host in {{.Host}}
+	t.templ.Execute(w, r)
 }
 
 // Added the Favicon
@@ -29,6 +31,10 @@ func faviconHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	var addr = flag.String("addr", ":8080", "The address of the application")
+	// parse the flags
+	flag.Parse()
+
 	r := newRoom()
 	http.Handle("/", &templateHandler{filename: "chat.html"})
 	http.Handle("/room", r)
@@ -39,7 +45,8 @@ func main() {
 	http.HandleFunc("/favicon.ico", faviconHandler)
 
 	// start the web server
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	log.Println("Starting the web server on:", *addr)
+	if err := http.ListenAndServe(*addr, nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
 }

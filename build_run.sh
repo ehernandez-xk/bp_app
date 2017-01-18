@@ -3,7 +3,8 @@
 # Variables
 IMAGE_NAME="myapp"
 CONTAINER_NAME="myapp"
-BINARY_NAME="app"
+BINARY_NAME="chat"
+PORT="8080"
 
 # Print log message
 function printlog() {
@@ -25,5 +26,5 @@ printlog "Building docker image"
 docker build --no-cache -t $CONTAINER_NAME .
 
 # Run Docker image
-docker run --name $CONTAINER_NAME -d -p 8080:8080 $CONTAINER_NAME
-printlog "Running app on localhost:8080"
+docker run --name $CONTAINER_NAME -d -p $PORT:$PORT $CONTAINER_NAME
+printlog "Running app on localhost:$PORT"
