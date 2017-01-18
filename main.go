@@ -29,7 +29,12 @@ func faviconHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	r := newRoom()
 	http.Handle("/", &templateHandler{filename: "chat.html"})
+	http.Handle("/room", r)
+
+	// get the room going
+	go r.run()
 
 	http.HandleFunc("/favicon.ico", faviconHandler)
 
