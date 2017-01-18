@@ -19,7 +19,7 @@ docker rmi $(docker images -f dangling=true -q) 2> /dev/null
 
 # Build binary
 printlog "Building app binary"
-GOOS="linux" GOARCH="amd64" go build -o $BINARY_NAME .
+GOOS="linux" GOARCH="amd64" go build -o chat/$BINARY_NAME ./chat/
 
 # Build Docker image
 printlog "Building docker image"
