@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -34,12 +35,19 @@ func faviconHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	var silent = flag.Bool("silent", false, "Silent the trancing logs")
 	var addr = flag.String("addr", ":8080", "The address of the application")
 	// parse the flags
 	flag.Parse()
 
 	r := newRoom()
-	r.tracer = trace.New(os.Stdout)
+	if *silent {
+		fmt.Println("Tracing logs off")
+		r.tracer = trace.Off()
+	} else {
+		fmt.Println("tracing logs active")
+		r.tracer = trace.New(os.Stdout)
+	}
 	http.Handle("/", &templateHandler{filename: "chat.html"})
 	http.Handle("/room", r)
 
