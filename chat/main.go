@@ -48,7 +48,10 @@ func main() {
 		fmt.Println("tracing logs active")
 		r.tracer = trace.New(os.Stdout)
 	}
-	http.Handle("/", &templateHandler{filename: "chat.html"})
+	//http.Handle("/", &templateHandler{filename: "chat.html"})
+	http.Handle("/chat", MustAuth(&templateHandler{filename: "chat.html"}))
+	http.Handle("/login", &templateHandler{filename: "login.html"})
+	http.HandleFunc("/auth/", loginHandler)
 	http.Handle("/room", r)
 
 	// get the room going
