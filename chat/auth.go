@@ -43,6 +43,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	provider := segs[3]
 	switch action {
 	case "login":
+		// This will login to the provider
 		provider, err := gomniauth.Provider(provider)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Error when trying to get provider %s: %s", provider, err), http.StatusBadRequest)
@@ -53,25 +54,35 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("Error when traying to GetBeginAuthURL for %s: %s", provider, err), http.StatusInternalServerError)
 			return
 		}
+
+		// if no error, redirects to the provider url e.g. https://github.com/login/oauth/authorize?...... to authenticate
+		// then the provider will redirect to the callback url with a code // e.g http://localhost:8080/auth/callback/github?code=xxxxx
 		w.Header().Set("Location", loginURL)
 		w.WriteHeader(http.StatusTemporaryRedirect)
 	case "callback":
+		// to manage the callback after provider authenticate
 		provider, err := gomniauth.Provider(provider)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Error whan trying to get provider %s: %s", provider, err), http.StatusBadRequest)
+			http.Error(w, fmt.Sprintf("Error when trying to get provider %s: %s", provider, err), http.StatusBadRequest)
 			return
 		}
+
+		// get the credentials using the url code that comes in the callback e.g. code=xxxxx
 		creds, err := provider.CompleteAuth(objx.MustFromURLQuery(r.URL.RawQuery))
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Error whan trying to complete auth for %s: %s", provider, err), http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("Error when trying to complete auth for %s: %s", provider, err), http.StatusInternalServerError)
 			return
 		}
+
+		// get the user of the provider
 		user, err := provider.GetUser(creds)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Error when trying to get the user from %s: %s", provider, err), http.StatusInternalServerError)
 			return
 		}
 		fmt.Printf("User Logged in: %s\n", user.Name())
+
+		// setup the Cookie
 		authCookieValue := objx.New(map[string]interface{}{
 			"name": user.Name(),
 		}).MustBase64()
@@ -80,6 +91,8 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			Value: authCookieValue,
 			Path:  "/",
 		})
+
+		// redirect to /chat
 		w.Header().Set("Location", "/chat")
 		w.WriteHeader(http.StatusTemporaryRedirect)
 
