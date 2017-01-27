@@ -11,6 +11,9 @@ import (
 	"text/template"
 
 	"github.com/ehernandez-xk/bp_app/trace"
+	"github.com/stretchr/gomniauth"
+	"github.com/stretchr/gomniauth/providers/github"
+	"github.com/stretchr/signature"
 )
 
 // templ represents a single template
@@ -39,6 +42,15 @@ func main() {
 	var addr = flag.String("addr", ":8080", "The address of the application")
 	// parse the flags
 	flag.Parse()
+
+	// Environment variables
+	ghClientid := os.Getenv("GITHUB_CLIENT_ID")
+	ghClientSecret := os.Getenv("GITHUB_CLIENT_SECRET")
+	// setup gomniauth
+	gomniauth.SetSecurityKey(signature.RandomKey(64))
+	gomniauth.WithProviders(
+		github.New(ghClientid, ghClientSecret, "http://localhost:8080/auth/callback/github"),
+	)
 
 	r := newRoom()
 	if *silent {
