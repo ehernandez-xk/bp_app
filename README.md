@@ -2,6 +2,20 @@
 
 Go to the localhost:8080/chat if you are new, it will re-direct to the /login section, choose Github service.
 
+## Install deps
+
+`go get github.com/ehernandez-xk/bp_app/chat`
+
+Yo need to install **bazaar**
+
+### Debian
+
+`sudo apt-get install bzr`
+
+### Mac
+
+
+
 ## run app
 
 `cd chat`
