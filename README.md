@@ -14,7 +14,7 @@ Yo need to install **bazaar**
 
 ### Mac
 
-
+`brew install bazaar`
 
 ## run app
 
@@ -43,3 +43,15 @@ To hide your application credentials
 `export GITHUB_CLIENT_ID=xxxxxxx`
 
 `export GITHUB_CLIENT_SECRET=xxxxxxx`
+
+## Setup application on providers
+
+### github
+
+`Settings -> OAuth applications -> Register a new application`
+
+```
+    Application name: bp_chat_app
+    Homepage URL: http://localhost:8080
+    Authorization callback URL: http://localhost:8080/auth/callback/github
+```
