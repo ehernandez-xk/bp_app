@@ -13,6 +13,7 @@ import (
 	"github.com/ehernandez-xk/bp_app/trace"
 	"github.com/stretchr/gomniauth"
 	"github.com/stretchr/gomniauth/providers/github"
+	"github.com/stretchr/objx"
 	"github.com/stretchr/signature"
 )
 
@@ -28,8 +29,15 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
 		t.templ = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
 	})
-	// Passing the request to inyect data in the template e.g. r.Host in {{.Host}}
-	t.templ.Execute(w, r)
+	// new objetc to hold the variables that will be used in the template.
+	data := map[string]interface{}{
+		"Host": r.Host,
+	}
+	if authCookie, err := r.Cookie("auth"); err == nil {
+		data["UserData"] = objx.MustFromBase64(authCookie.Value)
+	}
+	// now we are passing the data to inyect data in the template e.g. r.Host in {{.Host}} and {{.UserData.name}}
+	t.templ.Execute(w, data)
 }
 
 // Added the Favicon
