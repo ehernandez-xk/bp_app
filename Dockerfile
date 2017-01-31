@@ -1,4 +1,4 @@
-FROM scratch
+FROM alpine:latest
 
 MAINTAINER Eddy Hernández
 
@@ -10,4 +10,4 @@ EXPOSE 8080
 
 WORKDIR /app/chat
 
-CMD ["/app/chat/chat", "-addr=:8080"]
+CMD ["/app/chat/chat"]

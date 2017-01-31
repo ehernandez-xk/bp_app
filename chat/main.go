@@ -84,6 +84,12 @@ func main() {
 
 	// start the web server
 	log.Println("Starting the web server on:", addr)
+
+	// temporal hack to run inside the container
+	// if ListenAndServe receives the "localhost:8080", inside the container I can't reach it.
+	if *host == "localhost" {
+		addr = fmt.Sprintf(":%s", *port)
+	}
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}

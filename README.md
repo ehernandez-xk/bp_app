@@ -34,7 +34,7 @@ Yo need to install **bazaar**
 
 `./chat --help`
 
-`./chat -addr :8080 -silent`
+`./chat -host localhost -port 8080 -silent`
 
 ## env
 
@@ -47,6 +47,8 @@ To hide your application credentials
 ## Setup application on providers
 
 ### github
+
+Use localhost only to test locally, if you want to conect other devices you need to use and IP
 
 `Settings -> OAuth applications -> Register a new application`
 
