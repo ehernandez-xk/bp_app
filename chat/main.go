@@ -47,9 +47,12 @@ func faviconHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var silent = flag.Bool("silent", false, "Silent the trancing logs")
-	var addr = flag.String("addr", ":8080", "The address of the application")
+	var host = flag.String("host", "localhost", "Host of the app")
+	var port = flag.String("port", "8080", "Port of the app")
 	// parse the flags
 	flag.Parse()
+
+	addr := fmt.Sprintf("%s:%s", *host, *port)
 
 	// Environment variables
 	ghClientid := os.Getenv("GITHUB_CLIENT_ID")
@@ -57,7 +60,7 @@ func main() {
 	// setup gomniauth
 	gomniauth.SetSecurityKey(signature.RandomKey(64))
 	gomniauth.WithProviders(
-		github.New(ghClientid, ghClientSecret, "http://localhost:8080/auth/callback/github"),
+		github.New(ghClientid, ghClientSecret, fmt.Sprintf("http://%s/auth/callback/github", addr)),
 	)
 
 	r := newRoom()
@@ -80,8 +83,8 @@ func main() {
 	http.HandleFunc("/favicon.ico", faviconHandler)
 
 	// start the web server
-	log.Println("Starting the web server on:", *addr)
-	if err := http.ListenAndServe(*addr, nil); err != nil {
+	log.Println("Starting the web server on:", addr)
+	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
 }
