@@ -65,7 +65,9 @@ func main() {
 
 	// UseAuthAvatar is nil variable, we dont need it by the moment.
 	// we can access to methods of a nil object.(saving memory)
-	r := newRoom(UseAuthAvatar)
+	//r := newRoom(UseAuthAvatar)
+	// now uses the Gravatar avatar
+	r := newRoom(UseGravatar)
 	if *silent {
 		fmt.Println("Tracing logs off")
 		r.tracer = trace.Off()
