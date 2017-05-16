@@ -1,5 +1,7 @@
 # bp_app
 
+Chat application step by step from Blueprints book. author Mat Ryer
+
 Go to the localhost:8080/chat if you are new, it will re-direct to the /login section, choose Github service.
 
 ## Install deps
