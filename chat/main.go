@@ -63,7 +63,9 @@ func main() {
 		github.New(ghClientid, ghClientSecret, fmt.Sprintf("http://%s/auth/callback/github", addr)),
 	)
 
-	r := newRoom()
+	// UseAuthAvatar is nil variable, we dont need it by the moment.
+	// we can access to methods of a nil object.(saving memory)
+	r := newRoom(UseAuthAvatar)
 	if *silent {
 		fmt.Println("Tracing logs off")
 		r.tracer = trace.Off()
